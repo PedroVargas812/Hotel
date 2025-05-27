@@ -1,15 +1,70 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.time.LocalDate;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        Hotel hotel = new Hotel();
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        // Agregar algunas habitaciones al sistema
+        hotel.agregarHabitacion(new Habitacion(101, "Simple"));
+        hotel.agregarHabitacion(new Habitacion(102, "Doble"));
+        hotel.agregarHabitacion(new Habitacion(103, "Suite"));
+
+        Scanner scanner = new Scanner(System.in);
+        int opcion;
+
+        do {
+            System.out.println("\n==== MENÚ DE RESERVAS ====");
+            System.out.println("1. Ver habitaciones disponibles");
+            System.out.println("2. Crear una nueva reserva");
+            System.out.println("3. Eliminar una reserva");
+            System.out.println("4. Ver todas las reservas");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opción: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar el buffer
+
+            switch (opcion) {
+                case 1:
+                    hotel.mostrarDisponibles();
+                    break;
+
+                case 2:
+                    System.out.print("Nombre del cliente: ");
+                    String cliente = scanner.nextLine();
+                    System.out.print("Número de habitación: ");
+                    int numHabitacion = scanner.nextInt();
+                    scanner.nextLine(); // Limpiar buffer
+                    LocalDate fecha = LocalDate.now();
+                    hotel.crearReserva(cliente, numHabitacion, fecha);
+                    break;
+
+                case 3:
+                    System.out.print("Número de habitación a cancelar reserva: ");
+                    int habitacionCancelar = scanner.nextInt();
+                    scanner.nextLine(); // Limpiar buffer
+                    boolean eliminada = hotel.eliminarReserva(habitacionCancelar);
+                    if (eliminada) {
+                        System.out.println("Reserva eliminada correctamente.");
+                    } else {
+                        System.out.println("No se encontró una reserva para esa habitación.");
+                    }
+                    break;
+
+                case 4:
+                    hotel.mostrarReservas();
+                    break;
+
+                case 0:
+                    System.out.println("¡Gracias por usar el sistema de reservas!");
+                    break;
+
+                default:
+                    System.out.println("Opción inválida. Intente nuevamente.");
+            }
+
+        } while (opcion != 0);
+
+        scanner.close();
     }
 }
